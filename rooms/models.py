@@ -21,6 +21,18 @@ class RoomType(AbstractItem):
     pass
 
 
+class Amenity(AbstractItem):
+    pass
+
+
+class Facility(AbstractItem):
+    pass
+
+
+class HouseRule(AbstractItem):
+    pass
+
+
 class Room(core_models.TimeStampedModel):
     """Room Model Definition"""
 
@@ -39,7 +51,19 @@ class Room(core_models.TimeStampedModel):
 
     host = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
 
-    room_type = models.ManyToManyField(RoomType, blank=True)
+    room_type = models.ForeignKey(RoomType, on_delete=models.SET_NULL, null=True)
+    amenities = models.ManyToManyField(Amenity, blank=True)
+    facilities = models.ManyToManyField(Facility, blank=True)
+    house_rule = models.ManyToManyField(HouseRule, blank=True)
 
     def __str__(self):
         return self.name
+
+
+class Photo(core_models.TimeStampedModel):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    caption = models.CharField(max_length=50)
+    file = models.ImageField()
+
+    def __str__(self):
+        return self.caption

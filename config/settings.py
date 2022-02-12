@@ -138,3 +138,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
 # default User에서 직접 만든 User로 변경
 AUTH_USER_MODEL = "users.User"
+
+MEDIA_ROOT = ""

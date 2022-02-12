@@ -9,8 +9,13 @@ from rooms import models as room_models
 class List(core_models.TimeStampedModel):
 
     name = models.CharField(max_length=50)
-    user = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
-    room = models.ForeignKey(room_models.Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        user_models.User, related_name="lists", on_delete=models.CASCADE
+    )
+    room = models.ManyToManyField(room_models.Room, related_name="lists")
 
     def __str__(self):
         return self.name
+
+    def count_rooms(self):
+        return self.room.count()

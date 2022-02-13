@@ -49,6 +49,7 @@ class RoomAdmin(admin.ModelAdmin):
         "instant_book",
         "count_photos",
         "total_rating",
+        "count_amenities",
     ]
 
     raw_id_fields = ("host",)
@@ -61,6 +62,9 @@ class RoomAdmin(admin.ModelAdmin):
 
     def count_photos(self, obj):
         return obj.photos.count()
+
+    def count_amenities(self, obj):
+        return obj.amenities.count()
 
 
 @admin.register(models.Photo)

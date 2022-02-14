@@ -12,7 +12,7 @@ class List(core_models.TimeStampedModel):
     user = models.ForeignKey(
         user_models.User, related_name="lists", on_delete=models.CASCADE
     )
-    room = models.ManyToManyField(room_models.Room, related_name="lists")
+    room = models.ManyToManyField(room_models.Room, related_name="lists", blank=True)
 
     def __str__(self):
         return self.name

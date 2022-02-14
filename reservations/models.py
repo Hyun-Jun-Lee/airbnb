@@ -38,8 +38,12 @@ class Reservation(core_models.TimeStampedModel):
 
     def in_prograss(self):
         now = timezone.now().date()
-        return now > self.check_in and now < self.check_out
+        return now >= self.check_in and now <= self.check_out
+
+    in_prograss.boolean = True
 
     def is_finished(self):
         now = timezone.now().date()
         return now > self.check_out
+
+    is_finished.boolean = True

@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% block page_title %} 
+    Room List 
+{% endblock %} 
+
 {% for room in rooms %}
     <h1>
         <a href="{% url 'rooms:detail' room.pk %}">

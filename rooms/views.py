@@ -10,7 +10,7 @@ from . import models, forms
 
 class HomeView(ListView):
     model = models.Room
-    paginate_by = 10
+    paginate_by = 5
     paginate_orphans = 5
     context_object_name = "rooms"
 

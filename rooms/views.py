@@ -7,7 +7,7 @@ from . import models, forms
 
 # Create your views here.
 
-
+# ListView는 자동으로 templates에서 {appname}_list 라는 파일 이름을 찾는다
 class HomeView(ListView):
     model = models.Room
     paginate_by = 5

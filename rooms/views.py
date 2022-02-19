@@ -74,6 +74,21 @@ def search(request):
         "amenities": amenities,
         "facilities": facilities,
     }
+
+    filter_args = {}
+
+    if city != "Anywhere":
+        filter_args["city__startswith"] = city
+
+    filter_args["country"] = country
+
+    if room_type != 0:
+        filter_args["room_type__pk"] = room_type
+
+    rooms = models.Room.objects.filter(**filter_args)
+
+    return render(request, "rooms/search.html", {**form, **choices, "rooms": rooms})
+
     return render(
         request,
         "rooms/search.html",

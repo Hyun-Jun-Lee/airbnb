@@ -36,3 +36,7 @@ class CustomUserAdmin(UserAdmin):
         "is_staff",
         "is_superuser",
     )
+
+    ordering = [
+        "-id",
+    ]

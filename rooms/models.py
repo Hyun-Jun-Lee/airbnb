@@ -35,6 +35,15 @@ class HouseRule(AbstractItem):
     pass
 
 
+class Photo(core_models.TimeStampedModel):
+    room = models.ForeignKey("Room", related_name="photos", on_delete=models.CASCADE)
+    caption = models.CharField(max_length=50)
+    file = models.ImageField(upload_to="room_photos")
+
+    def __str__(self):
+        return self.caption
+
+
 class Room(core_models.TimeStampedModel):
     """Room Model Definition"""
 
@@ -82,11 +91,6 @@ class Room(core_models.TimeStampedModel):
             return all_ratings / len(all_reviews)
         return 0
 
-
-class Photo(core_models.TimeStampedModel):
-    room = models.ForeignKey(Room, related_name="photos", on_delete=models.CASCADE)
-    caption = models.CharField(max_length=50)
-    file = models.ImageField(upload_to="room_photos")
-
-    def __str__(self):
-        return self.caption
+    def first_photo(self):
+        (photo,) = self.photos.all()[:1]
+        return photo.file.url

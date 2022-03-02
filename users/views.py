@@ -1,9 +1,10 @@
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout
 from . import forms, models
+from django.core.files.base import ContentFile
 from django.contrib import messages
 import os
 import requests
@@ -167,10 +168,14 @@ def kakao_callback(request):
         )
         profile_json = profile_request.json()
         kakao_account = profile_json.get("kakao_account")
+        print(kakao_account)
         email = kakao_account["email"]
         if email is None:
             raise KakaoException("Please also give me your email")
         profile = kakao_account["profile"]
+        profile_image = (
+            profile_json.get("kakao_account").get("profile").get("profile_image_url")
+        )
         nickname = profile["nickname"]
 
         try:
@@ -186,9 +191,22 @@ def kakao_callback(request):
             )
             user.set_unusable_password()
             user.save()
+            if profile_image is not None:
+                photo_request = requests.get(profile_image)
+                user.avatar.save(
+                    f"{nickname}-avatar", ContentFile(photo_request.content)
+                )
         messages.success(request, f"Welcome back {user.first_name}")
         login(request, user)
         return redirect(reverse("core:home"))
     except KakaoException as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
+
+
+class UserProfileView(DetailView):
+
+    model = models.User
+    # 따로 지정해주지 않으면 user 와 겹쳐서 user가 로그인 된 사람이 아니라
+    # 해당 room host로 계속 바뀜
+    context_object_name = "user_obj"

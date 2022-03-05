@@ -164,8 +164,13 @@ def delete_photo(request, room_pk, photo_pk):
     user = request.user
     try:
         room = models.Room.objects.get(pk=room_pk)
+        photo = models.Photo.objects.get(pk=photo_pk)
+
+        if not (room.host.pk == user.pk and user.pk == photo.room.pk):
+            messages.error(request, "Can't delete that photo")
+
         if room.host.pk != user.pk:
-            messages.error(request, "Cant delete that photo")
+            messages.error(request, "Can't delete that photo")
         else:
             models.Photo.objects.filter(pk=photo_pk).delete()
             messages.success(request, "Photo Deleted")

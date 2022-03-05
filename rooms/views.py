@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, View, UpdateView
+from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from . import models, forms
 from users import mixins as user_mixins
 
@@ -180,14 +180,27 @@ def delete_photo(request, room_pk, photo_pk):
         room = models.Room.objects.get(pk=room_pk)
         photo = models.Photo.objects.get(pk=photo_pk)
 
-        if not (room.host.pk == user.pk and user.pk == photo.room.pk):
-            messages.error(request, "Can't delete that photo")
-
         if room.host.pk != user.pk:
-            messages.error(request, "Can't delete that photo")
+            if not (room.host.pk == user.pk and user.pk == photo.room.pk):
+                messages.error(request, "Can't delete that photo")
         else:
             models.Photo.objects.filter(pk=photo_pk).delete()
             messages.success(request, "Photo Deleted")
         return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
     except models.Room.DoesNotExist:
         return redirect(reverse("core:home"))
+
+
+class AddPhotoView(user_mixins.LoggedInOnlyView, FormView):
+
+    model = models.Photo
+    template_name = "rooms/photo_add.html"
+    fields = ("caption", "file")
+    form_class = forms.CreatePhotoForm
+
+    # form_valid do not use with SuccessMessageMixin
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        form.save(pk)
+        messages.success(self.request, "Photo Uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk": pk}))

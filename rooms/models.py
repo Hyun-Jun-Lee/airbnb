@@ -1,3 +1,4 @@
+from email.policy import default
 import re
 from django.db import models
 from django.urls import reverse
@@ -49,7 +50,7 @@ class Room(core_models.TimeStampedModel):
 
     name = models.CharField(max_length=50)
     description = models.TextField()
-    country = CountryField()
+    country = CountryField(default="KR")
     city = models.CharField(max_length=50)
     price = models.IntegerField()
     address = models.CharField(max_length=100)
@@ -92,8 +93,11 @@ class Room(core_models.TimeStampedModel):
         return 0
 
     def first_photo(self):
-        (photo,) = self.photos.all()[:1]
-        return photo.file.url
+        try:
+            (photo,) = self.photos.all()[:1]
+            return photo.file.url
+        except ValueError:
+            return None
 
     def get_next_photos(self):
         photos = self.photos.all()[1:5]

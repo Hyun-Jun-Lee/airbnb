@@ -16,9 +16,11 @@ class ReservationAdmin(admin.ModelAdmin):
         "in_prograss",
         "is_finished",
     )
-    
-    list_filter = ("status")
-    
+
+    list_filter = ("status",)
+
+
 @admin.register(models.BookedDay)
 class BookedDayAdmin(admin.ModelAdmin):
-    pass
+
+    list_display = ("day", "reservation")

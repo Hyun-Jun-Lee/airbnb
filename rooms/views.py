@@ -192,15 +192,31 @@ def delete_photo(request, room_pk, photo_pk):
 
 
 class AddPhotoView(user_mixins.LoggedInOnlyView, FormView):
-
-    model = models.Photo
+    # form에서 Meta 메서드로 받아왓기 때문에 없어도 됨
+    # model = models.Photo
+    # fields = ("caption", "file")
     template_name = "rooms/photo_add.html"
-    fields = ("caption", "file")
     form_class = forms.CreatePhotoForm
 
     # form_valid do not use with SuccessMessageMixin
+    # form에 pk를 보내는 역활
     def form_valid(self, form):
         pk = self.kwargs.get("pk")
         form.save(pk)
         messages.success(self.request, "Photo Uploaded")
         return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
+
+
+class CreateRoomView(user_mixins.LoggedInOnlyView, FormView):
+
+    form_class = forms.CreateRoomForm
+    template_name = "rooms/room_create.html"
+
+    def form_valid(self, form):
+        # form에서 저장한 room 받아오기
+        room = form.save()
+        # room.host 현재 사용자로 변경 후 저장
+        room.host = self.request.user
+        room.save()
+        messages.success(self.request, "Photo Uploaded")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))

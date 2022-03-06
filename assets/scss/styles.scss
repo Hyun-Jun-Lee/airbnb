@@ -90,3 +90,10 @@ form {
 .btn-link {
   @apply text-center py-3 rounded-lg font-light text-lg w-full text-white bg-red-500;
 }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  justify-items: center;
+}

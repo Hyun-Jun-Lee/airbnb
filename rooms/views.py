@@ -218,5 +218,7 @@ class CreateRoomView(user_mixins.LoggedInOnlyView, FormView):
         # room.host 현재 사용자로 변경 후 저장
         room.host = self.request.user
         room.save()
-        messages.success(self.request, "Photo Uploaded")
+        # it can user after save()
+        form.save_m2m()
+        messages.success(self.request, "Room Uploaded")
         return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))

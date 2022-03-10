@@ -2,6 +2,7 @@ from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.shortcuts import reverse
+from core import managers as core_managers
 
 # Create your models here.
 
@@ -60,6 +61,8 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+
+    objects = core_managers.CustomModelManager()
 
     def get_absolute_url(self):
         return reverse("users:profile", kwargs={"pk": self.pk})

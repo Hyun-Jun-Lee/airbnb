@@ -8,6 +8,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, View, UpdateView, FormView
 from . import models, forms
+from reservations import models as reservations_models
 from users import mixins as user_mixins
 
 # Create your views here.

@@ -1,11 +1,12 @@
 import datetime
-from django.views.generic import View
+from django.views.generic import View, ListView
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import render, redirect, reverse
 from rooms import models as room_models
 from reviews import forms as review_forms
 from . import models
+from users import mixins
 
 # Create your views here.
 
@@ -67,10 +68,22 @@ def edit_reservation(request, pk, verb):
     return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
 
 
-def reservation_list(request):
-    reservation_list = models.Reservation.objects.filter(guest=request.user)
-    return render(
-        request,
-        "reservations/reservation_list.html",
-        {"reservation_list": reservation_list},
-    )
+# def reservation_list(request):
+#     reservation_list = models.Reservation.objects.filter(guest=request.user)
+#     return render(
+#         request,
+#         "reservations/reservation_list.html",
+#         {"reservation_list": reservation_list},
+#     )
+
+
+class ReservationListView(mixins.LoggedInOnlyView, ListView):
+
+    template_name = "reservations/reservation_list.html"
+    context_object_name = "reservation_list"
+
+    # model = models.Reservation 이렇게 하면 모든 reservation이 가져와짐
+    # get_queryset 메서드로 설정하거나 queryset이라는 field로 정의 가능
+    def get_queryset(self):
+        qs = models.Reservation.objects.filter(guest=self.request.user)
+        return qs

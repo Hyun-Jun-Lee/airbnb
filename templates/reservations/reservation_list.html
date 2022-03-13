@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    {{user.first_name}}'s reservations
+{% endblock page_title %}
+
+{% block search-bar %}
+{% endblock search-bar %}
+
+{% block content %}
+<div class="min-h-75vh text-center">
+
+
+    {% for reservation in reservation_list %}
+    <div class="container-md mx-auto w-1/2 flex flex-col border rounded-xl shadow-sm px-8 py-6 mt-4 ">
+        <img src="{{reservation.room.first_photo}}">
+        <span class="mt-5 text-lg my-2 truncate">
+            <a href="{% url 'rooms:detail' reservation.room.pk %}">{{reservation.room.name}}</a>
+        </span>
+        <span class="mb-3 ml-3 text-lg {% if reservation.status == 'pending' %} text-yellow-600 
+        {% elif reservation.status == 'canceled' %} text-red-600 
+        {% else %} text-green-600 {% endif %}">
+            <a href="{% url 'reservations:detail' reservation.pk %}">{{reservation.status}}</a>
+        </span>
+        <span class="text-gray-600">Check In | {{reservation.check_in}}</span>
+        <span class="text-gray-600 mb-5">Check Out | {{reservation.check_out}} </span>
+        {% if reservation.status == 'pending' %}
+            <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="btn-link block px-3 mb-5">Cancel Reservation</a> 
+            {% if reservation.room.host == user %}
+                <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="btn-link block px-5">Confirm Reservation</a>  
+            {% endif %}
+        {% endif %}  
+    </div> 
+    {% endfor %}
+</div>
+{% endblock content %} 

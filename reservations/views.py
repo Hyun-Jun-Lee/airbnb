@@ -87,3 +87,21 @@ class ReservationListView(mixins.LoggedInOnlyView, ListView):
     def get_queryset(self):
         qs = models.Reservation.objects.filter(guest=self.request.user)
         return qs
+
+
+def reservation_list_host(request, pk):
+    reservations = models.Reservation.objects.filter(room__host=pk)
+    my_room = []
+
+    # protect path
+    for reservation in reservations:
+        if reservation.room.host != request.user:
+            raise Http404
+        if reservation.room not in my_room:
+            my_room.append(reservation.room)
+
+    return render(
+        request,
+        "reservations/reservation_list_host.html",
+        {"my_room": my_room, "reservations": reservations},
+    )

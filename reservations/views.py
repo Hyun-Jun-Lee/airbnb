@@ -65,3 +65,12 @@ def edit_reservation(request, pk, verb):
     reservation.save()
     messages.success(request, "Reservation Updated")
     return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
+
+
+def reservation_list(request):
+    reservation_list = models.Reservation.objects.filter(guest=request.user)
+    return render(
+        request,
+        "reservations/reservation_list.html",
+        {"reservation_list": reservation_list},
+    )

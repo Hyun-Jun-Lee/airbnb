@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-y1+^lyuidyk&g^pm=hpe(#y))$@*0oo4ioglnb%)vekj+x_rtm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["airbnb-clone.eba-du3wp2yw.ap-northeast-2.elasticbeanstalk.com"]
 
 DJANGO_APPS = [
     "django.contrib.admin",

@@ -26,7 +26,12 @@ SECRET_KEY = "django-insecure-y1+^lyuidyk&g^pm=hpe(#y))$@*0oo4ioglnb%)vekj+x_rtm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "website"]
+ALLOWED_HOSTS = [
+    "0.0.0.0",
+    "website",
+    ".ap-northeast-2.compute.amazonaws.com",
+    "localhost",
+]
 
 DJANGO_APPS = [
     "django.contrib.admin",

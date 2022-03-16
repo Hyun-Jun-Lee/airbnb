@@ -13,6 +13,7 @@ psycopg2 = "*"
 django-dotenv = "*"
 requests = "*"
 pipenv-to-requirements = "*"
+gunicorn = "*"
 
 [dev-packages]
 black = "*"

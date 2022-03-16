@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-y1+^lyuidyk&g^pm=hpe(#y))$@*0oo4ioglnb%)vekj+x_rtm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["airbnb-clone.eba-vpjcqwew.ap-northeast-2.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["0.0.0.0", "website"]
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -130,6 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 

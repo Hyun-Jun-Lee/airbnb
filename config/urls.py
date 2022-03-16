@@ -29,6 +29,6 @@ urlpatterns = [
     path("conversations/", include("conversations.urls", namespace="conversations")),
 ]
 
-# 개발 환경 일 때만
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# # 개발 환경 일 때만
+# if settings.DEBUG:
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

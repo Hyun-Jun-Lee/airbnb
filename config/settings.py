@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     "website",
     ".ap-northeast-2.compute.amazonaws.com",
     "localhost",
+    ".airclone.kro.kr",
 ]
 
 DJANGO_APPS = [

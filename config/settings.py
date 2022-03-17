@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     ".ap-northeast-2.compute.amazonaws.com",
     "localhost",
     ".airbnb-clone.site",
+    "172.31.0.31",
 ]
 
 DJANGO_APPS = [

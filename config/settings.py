@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     "localhost",
     ".airbnb-clone.site",
     "172.31.0.31",
+    "127.0.0.1",
 ]
 
 DJANGO_APPS = [

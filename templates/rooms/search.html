@@ -11,16 +11,19 @@
 
     <h2>Search!</h2>
 
-    <form method="get" action="{% url "rooms:search" %}">
-        {{form.as_p}}
-        <button>Search</button>
+    <form method="get" action="{% url 'rooms:search' %}">
+        <div class="container lg:w-5/12 md:w-1/2 xl:w-1/4 mx-auto my-2 flex-col items-center border p-6 border-gray-400 mb-8">
+            {% include 'mixins/room/room_form.html' with form=form btn_name="Search Room" %}
+        </div>
     </form>
 
-    <h3>Results</h3>
+    <h3 class="text-center text-logo text-3xl p-12">Results</h3>
 
-    {% for room in rooms %}
-        <h3>{{room.name}}</h3>
-    {% endfor %}
+    <div class="w-full flex justify-center">
+        {% for room in rooms  %}
+            {% include 'mixins/room_card.html' with room=room %}
+        {% endfor %}
+    </div>
 
 
 

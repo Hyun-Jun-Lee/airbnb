@@ -12,7 +12,7 @@
 
 
     {% for room in reservations %}
-    <div class="container-md mx-auto w-1/2 flex flex-col border rounded-xl shadow-sm px-8 py-6 mt-4 ">
+    <div class="container-md mx-auto w-1/4 flex flex-col border rounded-xl shadow-sm px-8 py-6 mt-4 ">
         <img src="{{room.room.first_photo}}">
         <span class="mt-5 text-lg my-2 truncate">
             <a href="{% url 'rooms:detail' room.room.pk %}">{{room.room.name}}</a>

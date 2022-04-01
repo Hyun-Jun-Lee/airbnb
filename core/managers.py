@@ -10,5 +10,7 @@ class CustomModelManager(models.Manager):
             return None
 
 
+# UserManager은 BaseUserManager을 상속 받고 있음
+# https://github.com/django/django/blob/main/django/contrib/auth/models.py
 class CustomUserManager(CustomModelManager, UserManager):
     pass

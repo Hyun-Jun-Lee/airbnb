@@ -20,45 +20,18 @@ class LoginView(mixins.LoggedOutOnlyView, FormView):
     form_class = forms.LoginForm
 
     def form_valid(self, form):
+        # forms.LoginForm에서 유효성 검사를 마친 데이터들
         email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password")
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+        # Redirects to get_success_url().
         return super().form_valid(form)
 
     # success_url = reverse_lazy("core:home")
     def get_success_url(self):
-        next_arg = self.request.GET.get("next")
-        if next_arg is not None:
-            return next_arg
-        else:
-            return reverse("core:home")
-
-
-# class LoginView(View):
-#     def get(self, request):
-#         form = forms.LoginForm()
-#         return render(request, "users/login.html", {"form": form})
-
-#     def post(self, request):
-#         form = forms.LoginForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data.get("email")
-#             password = form.cleaned_data.get("password")
-#             user = authenticate(request, username=email, password=password)
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect(reverse("core:home"))
-
-#         return render(request, "users/login.html", {"form": form})
-
-
-def log_out(request):
-    messages.info(request, f"GoodBye")
-    logout(request)
-    return redirect(reverse("core:home"))
-
+        return reverse("core:home")
 
 class SignUpView(mixins.LoggedOutOnlyView, FormView):
 

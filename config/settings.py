@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -155,4 +157,8 @@ AUTH_USER_MODEL = "users.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 MEDIA_URL = "/media/"
 
+#  'login_required()' decorator, 'LoginRequiredMixin', or 'AccessMixin'를 사용할 때 LOGIN_URL을 리다이렉트함.
+# LOGIN_REDIRECT_URL은 LoginView에서 사용
 LOGIN_URL = "/users/login/"
+
+LOGOUT_REDIRECT_URL = reverse_lazy("core:home")

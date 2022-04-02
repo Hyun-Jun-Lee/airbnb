@@ -33,6 +33,7 @@ class LoginView(mixins.LoggedOutOnlyView, FormView):
     def get_success_url(self):
         return reverse("core:home")
 
+
 class SignUpView(mixins.LoggedOutOnlyView, FormView):
 
     template_name = "users/signup.html"
@@ -47,6 +48,9 @@ class SignUpView(mixins.LoggedOutOnlyView, FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)
+
+
+# https://clownhacker.tistory.com/170
 
 
 def github_login(request):
@@ -65,6 +69,8 @@ def github_callback(request):
     try:
         client_id = os.environ.get("GITHUB_ID")
         client_secret = os.environ.get("GITHUB_SECRET")
+        # Github로 부텉 code를 받고 이 값을 토대로 requests 모듈을 사용하여 oauth/access_token으로 요청
+        # 이 때 헤더는 JSON 형식으로 받아야함
         code = request.GET.get("code", None)
         if code is not None:
             token_request = requests.post(
@@ -72,12 +78,12 @@ def github_callback(request):
                 headers={"Accept": "application/json"},
             )
             token_json = token_request.json()
+            # error가 없다면 None 반환
             error = token_json.get("error", None)
             if error is not None:
                 raise GithubException("Can't get access token")
             else:
                 access_token = token_json.get("access_token")
-                print(access_token)
                 profile_request = requests.get(
                     "https://api.github.com/user",
                     headers={
@@ -91,12 +97,14 @@ def github_callback(request):
                     name = profile_json.get("name")
                     email = profile_json.get("email")
                     bio = profile_json.get("bio")
+                    # 이미 회원가입이 되어있는 email인지 확인
                     try:
                         user = models.User.objects.get(email=email)
                         if user.login_method != models.User.LOGIN_GITHUB:
                             raise GithubException(
                                 f"Please log in with: {user.login_method}"
                             )
+                    # Github 에서 받아온 정보로 user생성
                     except models.User.DoesNotExist:
                         user = models.User.objects.create(
                             email=email,
@@ -105,6 +113,7 @@ def github_callback(request):
                             bio=bio,
                             login_method=models.User.LOGIN_GITHUB,
                         )
+                        # Github를 이용한 로그인이므로 password 설정 X
                         user.set_unusable_password()
                         user.save()
                     login(request, user)
@@ -213,6 +222,7 @@ class UpdateProfileView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView
     def get_object(self, queryset=None):
         return self.request.user
 
+    # form('mixins/auth/auth_form.html')을 인스턴스화 해서 return
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         form.fields["first_name"].widget.attrs = {"placeholder": "First name"}

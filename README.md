@@ -2,6 +2,8 @@
 
 <a href="https://www.airbnb-clone.site/">https://www.airbnb-clone.site/</a>
 
+<a href="https://nomadcoders.co/airbnb-clone">노마드코더</a> 강의를 참고하며 Airbnb 홈페이지 Clone Coding
+
 > Skils
 
 - Django

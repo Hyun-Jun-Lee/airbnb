@@ -2,7 +2,7 @@
 
 <a href="https://www.airbnb-clone.site/">https://www.airbnb-clone.site/</a>
 
-<a href="https://nomadcoders.co/airbnb-clone">노마드코더</a> 강의를 수강하며 Airbnb 홈페이지 Clone Coding
+<a href="https://nomadcoders.co/airbnb-clone">노마드코더</a> 강의를 참고하며 Airbnb 홈페이지 Clone Coding
 
 > Skils
 
@@ -107,4 +107,3 @@
 - Conversation
 
 ![image](https://user-images.githubusercontent.com/76996686/159277916-90518b9f-f4b5-40ed-b7a6-5b9a5c6e110f.png)
-

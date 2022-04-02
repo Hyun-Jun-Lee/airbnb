@@ -5,6 +5,7 @@ from . import models
 # Register your models here.
 @admin.register(models.User)
 class CustomUserAdmin(UserAdmin):
+    # UserAdmin에서 기본 제공하는 fieldset에 User 모델에서 정의한 필드 추가
     fieldsets = UserAdmin.fieldsets + (
         (
             "Custom Profile",
@@ -22,15 +23,11 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-
+    # UserAdmin.list_filter = ("is_staff", "is_superuser", "is_active", "groups")
     list_filter = UserAdmin.list_filter + ("superhost",)
 
-    list_display = (
-        "username",
-        "first_name",
-        "last_name",
-        "email",
-        "is_active",
+    # UserAdmin.list_display = ("username", "email", "first_name", "last_name", "is_staff")
+    list_display = UserAdmin.list_display + (
         "language",
         "currency",
         "superhost",

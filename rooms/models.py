@@ -76,9 +76,9 @@ class Room(core_models.TimeStampedModel):
     )
     # 오직 하나만 필요한 경우 foreign key를 사용하지만 여러개가 필요한 경우 ManyToMany를 사용
     # related_name : 역참조 대상인 객체를 부를 때 이름(원래는 [class_name]_set으로 접근)
-    amenities = models.ManyToManyField(Amenity, blank=True)
-    facilities = models.ManyToManyField(Facility, blank=True)
-    house_rule = models.ManyToManyField(HouseRule, blank=True)
+    amenities = models.ManyToManyField(Amenity, blank=True, related_name="rooms")
+    facilities = models.ManyToManyField(Facility, blank=True, related_name="rooms")
+    house_rule = models.ManyToManyField(HouseRule, blank=True, related_name="rooms")
 
     def __str__(self):
         return self.name

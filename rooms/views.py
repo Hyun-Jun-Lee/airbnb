@@ -132,7 +132,7 @@ class EditRoomView(user_mixins.LoggedInOnlyView, UpdateView):
         "facilities",
         "house_rule",
     )
-
+    # room_edit.html로 room context 전달
     def get_object(self, queryset=None):
         room = super().get_object(queryset=queryset)
         if room.host.pk != self.request.user.pk:

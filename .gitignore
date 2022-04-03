@@ -151,3 +151,4 @@ node_modules/
 !.elasticbeanstalk/*.global.yml
 
 *.pem
+uploads/*

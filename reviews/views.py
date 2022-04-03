@@ -1,10 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import redirect, reverse
-from django.views.generic import CreateView
+from django.views.generic import ListView
 from rooms import models as room_models
-from . import forms
+from . import forms, models
 from users import mixins
-from rooms import models
 
 # Create your views here.
 

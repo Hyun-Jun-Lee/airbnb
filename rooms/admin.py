@@ -4,6 +4,8 @@ from django.utils.html import mark_safe
 
 # Register your models here.
 
+# https://yonghyunlee.gitlab.io/python/django-master-5/
+
 
 @admin.register(models.RoomType, models.Facility, models.Amenity, models.HouseRule)
 class ItemAdmin(admin.ModelAdmin):

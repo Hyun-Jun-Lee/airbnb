@@ -26,7 +26,6 @@ urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("reservations/", include("reservations.urls", namespace="reservations")),
     path("reviews/", include("reviews.urls", namespace="reviews")),
-    path("conversations/", include("conversations.urls", namespace="conversations")),
 ]
 
 # # 개발 환경 일 때만

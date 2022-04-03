@@ -14,7 +14,8 @@ from calend import Calendar
 class AbstractItem(core_models.TimeStampedModel):
 
     name = models.CharField(max_length=50)
-
+    # abstract = True로 설정하면 해당 클래스는 DB 테이블을 가지지 않고
+    # 이 클래스를 상속 받은 자식 클래스들이 실체가 있는 DB 테이블이 된다.
     class Meta:
         abstract = True
 
@@ -22,7 +23,9 @@ class AbstractItem(core_models.TimeStampedModel):
         return self.name
 
 
+# admin 채널에서 직접 추가 가능
 class RoomType(AbstractItem):
+    # verbose_name : admin에서 보일 이름
     pass
 
 
@@ -64,16 +67,18 @@ class Room(core_models.TimeStampedModel):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
 
+    # on_delete는 ForeignKey에만 쓰임(ForeignKey는 한가지에만 연결되기 때문에)
     host = models.ForeignKey(
         user_models.User, related_name="rooms", on_delete=models.CASCADE
     )
     room_type = models.ForeignKey(
         RoomType, related_name="rooms", on_delete=models.SET_NULL, null=True
     )
-
-    amenities = models.ManyToManyField(Amenity, related_name="rooms", blank=True)
-    facilities = models.ManyToManyField(Facility, related_name="rooms", blank=True)
-    house_rule = models.ManyToManyField(HouseRule, related_name="rooms", blank=True)
+    # 오직 하나만 필요한 경우 foreign key를 사용하지만 여러개가 필요한 경우 ManyToMany를 사용
+    # related_name : 역참조 대상인 객체를 부를 때 이름(원래는 [class_name]_set으로 접근)
+    amenities = models.ManyToManyField(Amenity, blank=True, related_name="rooms")
+    facilities = models.ManyToManyField(Facility, blank=True, related_name="rooms")
+    house_rule = models.ManyToManyField(HouseRule, blank=True, related_name="rooms")
 
     def __str__(self):
         return self.name

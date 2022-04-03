@@ -23,6 +23,7 @@ class CreateReviewForm(forms.ModelForm):
             "value",
         )
 
+    # commit=False를 통해 object를 '생성'하기만 하고 view로 해당 object 리턴
     def save(self):
         review = super().save(commit=False)
         return review

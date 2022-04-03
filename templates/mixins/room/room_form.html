@@ -7,9 +7,11 @@
         {% endfor %}
     {% endif %}
 
-    {% for field in form %}
+    {{form.as_p}}
+
+    <!-- {% for field in form %}
         {% include 'mixins/room/room_input.html' with field=field %}
-    {% endfor %}
+    {% endfor %} -->
 
     <button class="btn bg-red-500 text-white">{{btn_name}}</button>
 </form> 

@@ -1,12 +1,20 @@
 from time import timezone
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import Http404
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, View, UpdateView, FormView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    View,
+    UpdateView,
+    FormView,
+    DeleteView,
+)
 from . import models, forms
 from reservations import models as reservations_models
 from users import mixins as user_mixins
@@ -31,87 +39,70 @@ class RoomDetail(DetailView):
     model = models.Room
 
 
-# def room_detail(request, pk):
-#     try:
-#         room = models.Room.objects.get(pk=pk)
-#         return render(request, "rooms/detail.html", {"room": room})
-#     except models.Room.DoesNotExist:
-#         return redirect(reverse("core:home"))
-
-
 class SearchView(View):
     def get(self, request):
+        form = forms.SearchForm(request.GET)
 
-        country = request.GET.get("country")
+        if form.is_valid():
 
-        if country:
+            city = form.cleaned_data.get("city")
+            country = form.cleaned_data.get("country")
+            room_type = form.cleaned_data.get("room_type")
+            min_price = form.cleaned_data.get("min_price")
+            max_price = form.cleaned_data.get("max_price")
+            guests = form.cleaned_data.get("guests")
+            bedrooms = form.cleaned_data.get("bedrooms")
+            beds = form.cleaned_data.get("beds")
+            baths = form.cleaned_data.get("baths")
+            superhost = form.cleaned_data.get("superhost")
+            amenities = form.cleaned_data.get("amenities")
+            facilities = form.cleaned_data.get("facilities")
 
-            form = forms.SearchForm(request.GET)
+            filtering = {}
 
-            if form.is_valid():
+            if city != "Any City":
+                filtering["city__startswith"] = city
 
-                city = form.cleaned_data.get("city")
-                country = form.cleaned_data.get("country")
-                room_type = form.cleaned_data.get("room_type")
-                price = form.cleaned_data.get("price")
-                guests = form.cleaned_data.get("guests")
-                bedrooms = form.cleaned_data.get("bedrooms")
-                beds = form.cleaned_data.get("beds")
-                baths = form.cleaned_data.get("baths")
-                instant_book = form.cleaned_data.get("instant_book")
-                superhost = form.cleaned_data.get("superhost")
-                amenities = form.cleaned_data.get("amenities")
-                facilities = form.cleaned_data.get("facilities")
+            filtering["country"] = country
 
-                filter_args = {}
+            if room_type is not None:
+                filtering["room_type"] = room_type
 
-                if city != "Anywhere":
-                    filter_args["city__startswith"] = city
+            if min_price is not None and max_price is not None:
+                filtering["price__gte"] = min_price
+                filtering["price__lte"] = max_price
 
-                filter_args["country"] = country
+            if guests is not None:
+                filtering["guests__gte"] = guests
 
-                if room_type is not None:
-                    filter_args["room_type"] = room_type
+            if bedrooms is not None:
+                filtering["bedrooms__gte"] = bedrooms
 
-                if price is not None:
-                    filter_args["price__lte"] = price
+            if beds is not None:
+                filtering["beds__gte"] = beds
 
-                if guests is not None:
-                    filter_args["guests__gte"] = guests
+            if baths is not None:
+                filtering["baths__gte"] = baths
 
-                if bedrooms is not None:
-                    filter_args["bedrooms__gte"] = bedrooms
+            if superhost is True:
+                filtering["host__superhost"] = True
 
-                if beds is not None:
-                    filter_args["beds__gte"] = beds
+            for amenity in amenities:
+                filtering["amenities"] = amenity
 
-                if baths is not None:
-                    filter_args["baths__gte"] = baths
+            for facility in facilities:
+                filtering["facilities"] = facility
 
-                if instant_book is True:
-                    filter_args["instant_book"] = True
+            # ** : unpack
+            qs = models.Room.objects.filter(**filtering).order_by("-created")
 
-                if superhost is True:
-                    filter_args["host__superhost"] = True
+            paginator = Paginator(qs, 10, orphans=5)
 
-                for amenity in amenities:
-                    filter_args["amenities"] = amenity
+            page = request.GET.get("page", 1)
 
-                for facility in facilities:
-                    filter_args["facilities"] = facility
+            rooms = paginator.get_page(page)
 
-                qs = models.Room.objects.filter(**filter_args).order_by("-created")
-
-                paginator = Paginator(qs, 10, orphans=5)
-
-                page = request.GET.get("page", 1)
-
-                rooms = paginator.get_page(page)
-
-                return render(
-                    request, "rooms/search.html", {"form": form, "rooms": rooms}
-                )
-
+            return render(request, "rooms/search.html", {"form": form, "rooms": rooms})
         else:
             form = forms.SearchForm()
 
@@ -141,7 +132,7 @@ class EditRoomView(user_mixins.LoggedInOnlyView, UpdateView):
         "facilities",
         "house_rule",
     )
-
+    # room_edit.html로 room context 전달
     def get_object(self, queryset=None):
         room = super().get_object(queryset=queryset)
         if room.host.pk != self.request.user.pk:
@@ -223,3 +214,19 @@ class CreateRoomView(user_mixins.LoggedInOnlyView, FormView):
         form.save_m2m()
         messages.success(self.request, "Room Uploaded")
         return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))
+
+
+@login_required
+def delete_room(request, pk):
+    try:
+        room = get_object_or_404(models.Room, pk=pk)
+
+        if request.user.pk != room.host.pk:
+            raise Http404("Can't Delete This Room")
+
+        room.delete()
+        messages.success(request, f"{room.name} Delete Complete")
+        return redirect(reverse("core:home"))
+    except models.Room.DoesNotExist:
+        messages.error(request, "Can't Delete This Room")
+        return redirect(reverse("core:home"))

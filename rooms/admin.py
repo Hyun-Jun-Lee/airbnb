@@ -4,6 +4,8 @@ from django.utils.html import mark_safe
 
 # Register your models here.
 
+# https://yonghyunlee.gitlab.io/python/django-master-5/
+
 
 @admin.register(models.RoomType, models.Facility, models.Amenity, models.HouseRule)
 class ItemAdmin(admin.ModelAdmin):
@@ -14,6 +16,7 @@ class ItemAdmin(admin.ModelAdmin):
         return obj.rooms.count()
 
 
+# TabularInline : 관련 객체를 테이블 기반 형식으로
 class PhotoInline(admin.TabularInline):
 
     model = models.Photo
@@ -50,14 +53,15 @@ class RoomAdmin(admin.ModelAdmin):
         "count_photos",
         "total_rating",
         "count_amenities",
+        "get_ratings",
     ]
-
+    # FK, ManyToManyField에 대해 더 편리한 input 위젯을 제공, admin에서 돋보기 모양
     raw_id_fields = ("host",)
 
     list_filter = ["city", "country", "instant_book"]
 
     search_fields = ["city", "^host__username"]
-
+    # ManyToMany fields 다중 선택 기능
     filter_horizontal = ["amenities", "facilities", "house_rule"]
 
     def count_photos(self, obj):
@@ -65,6 +69,16 @@ class RoomAdmin(admin.ModelAdmin):
 
     def count_amenities(self, obj):
         return obj.amenities.count()
+
+    def get_ratings(self, obj):
+        reviews = obj.reviews.all()
+        all_ratings = 0
+
+        if len(reviews) > 0:
+            for review in reviews:
+                all_ratings += review.rating_avg()
+            return round(all_ratings / len(reviews), 2)
+        return 0
 
 
 @admin.register(models.Photo)

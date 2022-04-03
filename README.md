@@ -17,7 +17,7 @@
 - rooms :  Room 생성 삭제 및 검색, Room list, 사진 업로드 및 수정 기능, 리뷰 평점, 조건에 맞는 검색 기능 구현
 - reservations : Room 예약 및 예약 진행 상태 확인(Confirm, Pending, Cancel)
 - reviews : Review 생성 및 MyReviw list 기능
-- conversations : 예약 상태가 'Confirm' 일 때, Direct Message 기능 구현 
+
 
 > 구현 기능 상세
 
@@ -107,7 +107,3 @@
 ![image](https://user-images.githubusercontent.com/76996686/161437026-7fdbbe54-2a02-43d1-9da6-5e6275ae0684.png)
 
 <br>
-
-- Conversation
-
-![image](https://user-images.githubusercontent.com/76996686/159277916-90518b9f-f4b5-40ed-b7a6-5b9a5c6e110f.png)

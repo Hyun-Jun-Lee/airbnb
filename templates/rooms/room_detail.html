@@ -22,6 +22,16 @@
                 <div class="mb-5">
                     <h4 class="text-3xl font-medium mb-px">{{room.name}}</h4>
                     <span class="text-gray-700 font-light">{{room.city}}</span>
+                    {% if request.user in room.like_users.all %}
+                    <a href="{% url 'rooms:like' room.pk %}">
+                        <i class="fas fa-heart fa-lg animated hinge delay-1s" style="color: red;"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'rooms:like' room.pk %}">
+                        <i class="far fa-heart fa-lg animated infinite bounce delay-1s" style="color: gray;"></i>
+                    </a>
+                    {% endif %}
+                    <p>{{ room.like_users.count }}명이 좋아합니다.</p>
                 </div>
                 <a href="{{room.host.get_absolute_url}}" class="flex flex-col items-center">
                     {% include "mixins/user_avatar.html" with user=room.host %}

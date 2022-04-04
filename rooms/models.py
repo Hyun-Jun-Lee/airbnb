@@ -79,6 +79,11 @@ class Room(core_models.TimeStampedModel):
     amenities = models.ManyToManyField(Amenity, blank=True, related_name="rooms")
     facilities = models.ManyToManyField(Facility, blank=True, related_name="rooms")
     house_rule = models.ManyToManyField(HouseRule, blank=True, related_name="rooms")
+    # through : 중간 테이블 지정, M:N 관계
+    like_users = models.ManyToManyField(
+        user_models.User, through="Like", related_name="liked_rooms", blank=True
+    )
+    like_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -116,3 +121,8 @@ class Room(core_models.TimeStampedModel):
         nextmonth = today + relativedelta.relativedelta(months=1)
         next_month = Calendar(nextmonth.year, nextmonth.month)
         return [this_month, next_month]
+
+
+class Like(models.Model):
+    user = models.ForeignKey(user_models.User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)

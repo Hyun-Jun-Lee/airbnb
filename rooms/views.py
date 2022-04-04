@@ -230,3 +230,21 @@ def delete_room(request, pk):
     except models.Room.DoesNotExist:
         messages.error(request, "Can't Delete This Room")
         return redirect(reverse("core:home"))
+
+
+@login_required
+def room_like(request, room_pk):
+    if request.user.is_authenticated:
+        room = get_object_or_404(models.Room, pk=room_pk)
+
+        if room.like_users.filter(pk=request.user.pk).exists():
+            room.like_users.remove(request.user)
+            room.like_count -= 1
+            room.save()
+        else:
+            room.like_users.add(request.user)
+            room.like_count += 1
+            room.save()
+        return redirect(reverse("rooms:detail", kwargs={"pk": room_pk}))
+    else:
+        return redirect(reverse("core:home"))

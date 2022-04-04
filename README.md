@@ -9,6 +9,9 @@
 - Django
 - tawlind css
 - AWS EC2
+- Docker
+  - reference : https://qwlake.github.io/django/aws/docker/2020/03/17/django-deploy-at-aws-with-docker/
+  - reference : https://moondol-ai.tistory.com/465
 
 > 구현 기능
 
